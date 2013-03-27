@@ -12,20 +12,21 @@ Paropt is a python toolkit for optimizing an application's parameters using syst
 
 ### Options
 
-  * `--t` `--xtol` Specify a tolerance value for the optimization (default: 1e-6)
+  * `-t` `--xtol` Specify a tolerance value for the optimization (default: 1e-6)
+  * `-o` `--optimization` Specify a direction for the optimization ('min' or 'max')
 
 ## Example
 
-The following example optimizes the Rosenbrock banana function located in `examples/rosenbrock.py` in 5 variables.
+The following example minimizes the Rosenbrock banana function located in `examples/rosenbrock.py` in 5 variables.
 
 Let's say we have a python program calculating the value of the Rosenbrock function that takes values from the command line and returns the value of the function in STDOUT:
 
     $ examples/rosenbrock.py 1.3 0.7 0.8 1.9 1.2
     fx = 8.4822000000e+02 
 
-We can optimize this function using popt:
+We can minimize this function using popt:
 
-    $ ./popt --xtol 1e-8 'examples/rosenbrock.py {} {} {} {} {}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
+    $ ./popt -o min --xtol 1e-8 'examples/rosenbrock.py {} {} {} {} {}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
     [...]
     success: True
     status: 0
