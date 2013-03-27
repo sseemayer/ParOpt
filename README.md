@@ -1,6 +1,6 @@
 # Paropt - generic command-line parameter optimization
 
-Paropt is a python toolkit for optimizing an application's parameters using system calls and parsing performance data from STDOUT. From a starting value, it will call the command line given to it repeatedly, converging into optimal parameters using the [Nelder-mead](http://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) algorithm.
+Paropt is a python tool for optimizing an application's parameters using system calls and parsing performance data from STDOUT. From a starting value, it will call the command line given to it repeatedly, converging into optimal parameters using the [Nelder-mead](http://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method) algorithm.
 
 ## Usage
 
