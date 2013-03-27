@@ -4,16 +4,20 @@ Paropt is a python tool for optimizing an application's parameters using system 
 
 ## Usage
 
-     popt [options] "optimization_call {0} {1} {2}..." "regex_with (group)" x0 x1 x2 ...
+     popt [options] {min,max} fn_call fval_regex x0 x1 x2 ...
 
-  * `optimization_call` is a valid system call using placeholders (`{}` or numbered with `{0}`, `{1}`, etc.) for parameters.
-  * `regex` is a valid regular expression that contains a capturing group representing the function value to parse out
-  * All additional positional arguments will represent initial values for the variables
+### Positional Arguments
 
-### Options
+  * `{min,max}` The direction of optimization
+  * `fn_call` A valid system call with placeholders (`{}` or numbered with `{0}`, `{1}`, etc.) representing parameters, e.g. `'examples/rosenbrock.py {} {}'`.
+  * `fval_regex` A valid regular expression that contains a capturing group representing the function value to parse out, e.g. `'fx = (.*)'`
 
+All additional positional arguments will represent initial values for the variables - make sure the number of variables matches your function call!
+
+### Optional Arguments
+
+  * `-h` `--help` Display help
   * `-t` `--xtol` Specify a tolerance value for the optimization (default: 1e-6)
-  * `-o` `--optimization` Specify a direction for the optimization ('min' or 'max')
 
 ## Example
 
@@ -26,7 +30,7 @@ Let's say we have a python program calculating the value of the Rosenbrock funct
 
 We can minimize this function using popt:
 
-    $ ./popt -o min --xtol 1e-8 'examples/rosenbrock.py {} {} {} {} {}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
+    $ ./popt --xtol 1e-8 min 'examples/rosenbrock.py {} {} {} {} {}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
     [...]
     success: True
     status: 0

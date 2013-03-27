@@ -4,37 +4,34 @@ import paropt.value
 import re
 from scipy.optimize import minimize
 
-import optparse
+import argparse
 
 def main():
 
-    parser = optparse.OptionParser('Usage: %prog [options] "optimization_call {0} {1} {2}..." "regex_with (group)" x0 x1 x2 ...')
-    parser.add_option('-t', '--xtol', dest='xtol', type='float', default=1e-6, metavar='XTOL', help='Specify tolerance [default: %default]')
-    parser.add_option('-o', '--optimize', dest='optimize', default=None, metavar='DIRECTION', help='Specify if we want to maximize (max) or minimize (min) [default: %default]')
 
-    opt, args = parser.parse_args()
+    parser = argparse.ArgumentParser(description='Optimize a function from the command line')
+    parser.add_argument('direction', choices=['min', 'max'], help='The direction of optimization (either "min" or "max")')
+    parser.add_argument('fn_call', help='The system call to make to call the function with parameters, using a python format string')
+    parser.add_argument('fval_regex', help='The regular expression to execute on the function\'s STDOUT stream with a capturing group representing the function value')
+    parser.add_argument('-t', '--xtol', default=1e-6, type=float, help='Specify tolerance [default: %(default)s]')
 
-    if len(args) < 3:
+    args, ini = parser.parse_known_args()
+
+    if len(ini) < 1:
         parser.error("Incorrect number of arguments")
 
-    if not (opt.optimize == 'max' or  opt.optimize == 'min'):
-        parser.error("Please specify a valid direction of optimization using the --optimize parameter!")
-
-    cmd, reg = args[0:2]
-    ini = args[2:]
-
-    cmd = command.format_fn(cmd)
-    val = value.regex_fn(re.compile(reg))
+    cmd = command.format_fn(args.fn_call)
+    val = value.regex_fn(re.compile(args.fval_regex))
 
     ext = optimization.external_fn(cmd, val)
     ini = [float(x) for x in ini]
 
-    if opt.optimize == 'max':
+    if args.direction == 'max':
         fmin = lambda x: -ext(x)
     else:
         fmin = ext
 
-    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': opt.xtol})
+    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': args.xtol})
 
     print(ret)
 
