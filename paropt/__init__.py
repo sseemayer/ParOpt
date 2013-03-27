@@ -14,6 +14,7 @@ def main():
     parser.add_argument('fn_call', help='The system call to make to call the function with parameters, using a python format string')
     parser.add_argument('fval_regex', help='The regular expression to execute on the function\'s STDOUT stream with a capturing group representing the function value')
     parser.add_argument('-t', '--xtol', default=1e-6, type=float, help='Specify tolerance [default: %(default)s]')
+    parser.add_argument('-i', '--maxiter', default=None, type=int, help='Specify maximum number of iterations [default: %(default)s]')
 
     args, ini = parser.parse_known_args()
 
@@ -31,7 +32,11 @@ def main():
     else:
         fmin = ext
 
-    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': args.xtol})
+    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': args.xtol, 'maxiter': args.maxiter})
 
-    print(ret)
+    ret['message'] = 'Terminated successfully' if ret['success'] else 'Aborted'
+    ret['variables'] = " ".join( '{:g}'.format(x) for x in ret['x'].tolist() )
+
+    print("{message} after {nit} iterations and {nfev} function evaluations.\nThe optimal function value is {fun:g}\nOptimal variables:\n{variables}".format(**ret))
+
 
