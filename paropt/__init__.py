@@ -10,11 +10,15 @@ def main():
 
     parser = optparse.OptionParser('Usage: %prog [options] "optimization_call {0} {1} {2}..." "regex_with (group)" x0 x1 x2 ...')
     parser.add_option('-t', '--xtol', dest='xtol', type='float', default=1e-6, metavar='XTOL', help='Specify tolerance [default: %default]')
+    parser.add_option('-o', '--optimize', dest='optimize', default=None, metavar='DIRECTION', help='Specify if we want to maximize (max) or minimize (min) [default: %default]')
 
     opt, args = parser.parse_args()
 
     if len(args) < 3:
         parser.error("Incorrect number of arguments")
+
+    if not (opt.optimize == 'max' or  opt.optimize == 'min'):
+        parser.error("Please specify a valid direction of optimization using the --optimize parameter!")
 
     cmd, reg = args[0:2]
     ini = args[2:]
@@ -25,7 +29,12 @@ def main():
     ext = optimization.external_fn(cmd, val)
     ini = [float(x) for x in ini]
 
-    ret = minimize(ext, ini, method='nelder-mead', options={'xtol': opt.xtol})
+    if opt.optimize == 'max':
+        fmin = lambda x: -ext(x)
+    else:
+        fmin = ext
+
+    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': opt.xtol})
 
     print(ret)
 
