@@ -1,8 +1,11 @@
 import paropt.optimization
 import paropt.command
 import paropt.value
+
+import paropt.neldermead
+import paropt.grid
+
 import re
-from scipy.optimize import minimize
 
 import argparse
 
@@ -15,6 +18,8 @@ def main():
     parser.add_argument('fval_regex', help='The regular expression to execute on the function\'s STDOUT stream with a capturing group representing the function value')
     parser.add_argument('-t', '--xtol', default=1e-6, type=float, help='Specify tolerance [default: %(default)s]')
     parser.add_argument('-i', '--maxiter', default=None, type=int, help='Specify maximum number of iterations [default: %(default)s]')
+    parser.add_argument('-g', '--grid', dest='grid', default=False, action='store_true', help='Use grid search (requires variables to be specified as ranges)')
+    parser.add_argument('-n', '--nelder-mead', dest='grid', action='store_false', help='Use nelder-mead search')
 
     args, ini = parser.parse_known_args()
 
@@ -25,18 +30,35 @@ def main():
     val = value.regex_fn(re.compile(args.fval_regex))
 
     ext = optimization.external_fn(cmd, val)
-    ini = [float(x) for x in ini]
 
     if args.direction == 'max':
         fmin = lambda x: -ext(x)
     else:
         fmin = ext
 
-    ret = minimize(fmin, ini, method='nelder-mead', options={'xtol': args.xtol, 'maxiter': args.maxiter})
 
-    ret['message'] = 'Terminated successfully' if ret['success'] else 'Aborted'
-    ret['variables'] = " ".join( '{:g}'.format(x) for x in ret['x'].tolist() )
+    if args.grid:
+        vardef = [parse_varrange(s) for s in ini]
+        grid.minimize_grid(fmin, vardef)
+    else:
+        ini = [float(x) for x in ini]
+        neldermead.minimize_neldermead(fmin, ini, args.xtol, args.maxiter)
 
-    print("{message} after {nit} iterations and {nfev} function evaluations.\nThe optimal function value is {fun:g}\nOptimal variables:\n{variables}".format(**ret))
 
+def parse_varrange(s):
+    """Parse a variable range definition from string"""
+
+    v = [ float(f) for f in re.split('[,;|]', s) ]
+
+    if len(v) == 1:
+        return v[0], v[0], 1
+
+    elif len(v) == 2:
+        return v[0], v[1], 1
+
+    elif len(v) == 3:
+        return v[0], v[1], v[2]
+
+    else:
+       raise Exception("Unknown number range format: '{}'".format(s))
 
