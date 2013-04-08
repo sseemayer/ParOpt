@@ -62,7 +62,7 @@ def parse_varrange(s):
     else:
 
         if len(v) == 1:
-            return numpy.arange(v[0], v[0], 1)
+            return [v[0]]
 
         elif len(v) == 2:
             return numpy.arange(v[0], v[1], 1)
