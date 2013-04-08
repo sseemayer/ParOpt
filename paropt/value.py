@@ -24,7 +24,7 @@ def regex_fn(pattern, process_fn=float):
 
     def inside(line):
         """Inner matching function"""
-        m = pattern.match(line)
+        m = pattern.search(line)
         if m:
             return process_fn(m.group(1))
         else:

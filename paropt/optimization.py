@@ -28,7 +28,7 @@ def external_fn(cmdline_fn, performance_fn, show_iter=True):
             line = line.decode(sys.stdout.encoding)
 
             fval_line = performance_fn(line)
-            if fval_line:
+            if fval_line != None:
                 fval = fval_line
 
         ret = proc.wait()
