@@ -62,7 +62,7 @@ We can minimize this function using popt:
 
 The following example minimizes the Rosenbrock banana function located in `examples/rosenbrock.py` in 2 variables using grid search covering the grid `[0, 0.1, ... 1.9]` for each of the variables.
 
-	$ ./popt -g min 'examples/rosenbrock.py {} {}' 'fx = (.*)' 0,2,0.1, 0,2,0.1
+	$ ./popt -g min 'examples/rosenbrock.py {} {}' 'fx = (.*)' 0,2,0.1 0,2,0.1
 
 ## Dependencies
 
