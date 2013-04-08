@@ -8,6 +8,7 @@ import paropt.grid
 import re
 
 import argparse
+import numpy
 
 def main():
 
@@ -48,17 +49,27 @@ def main():
 def parse_varrange(s):
     """Parse a variable range definition from string"""
 
-    v = [ float(f) for f in re.split('[,;|]', s) ]
+    is_list = s[0] == 'l'
 
-    if len(v) == 1:
-        return v[0], v[0], 1
+    if is_list:
+        s = s[1:]
 
-    elif len(v) == 2:
-        return v[0], v[1], 1
+    v = [ float(f) for f in re.split('[,;:|]', s) ]
 
-    elif len(v) == 3:
-        return v[0], v[1], v[2]
+    if is_list:
+        return v
 
     else:
-       raise Exception("Unknown number range format: '{}'".format(s))
+
+        if len(v) == 1:
+            return numpy.arange(v[0], v[0], 1)
+
+        elif len(v) == 2:
+            return numpy.arange(v[0], v[1], 1)
+
+        elif len(v) == 3:
+            return numpy.arange(v[0], v[1], v[2])
+
+        else:
+            raise Exception("Unknown number range format: '{}'".format(s))
 

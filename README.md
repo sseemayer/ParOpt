@@ -33,6 +33,8 @@ If optimizing using grid search, variables are not given as initial values but a
 
 Valid delimiter characters are: `,;|`
 
+You can optionally specify lists of values for a variable by prefixing the range specification with the `l` character. For example, to specify the list of prime numbers smaller than 10: `l2,3,5,7`
+
 ## Example
 
 ### Nelder-mead optimization

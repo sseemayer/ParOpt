@@ -6,12 +6,10 @@ import numpy
 def minimize_grid(fn, vardef):
     """Minimize a function using grid search"""
 
-    varranges = [ numpy.arange(*vd) for vd in vardef ]
-
     fmin = float('Inf')
     xmin = None
     neval = 0
-    for varset in itertools.product(*varranges):
+    for varset in itertools.product(*vardef):
         neval += 1
 
         fval = fn(varset)
