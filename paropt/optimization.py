@@ -11,12 +11,11 @@ def external_fn(cmdline_fn, performance_fn, show_iter=True):
         performance_fn -- A function taking a line of STDOUT output and returns a function value, if found, or None
     """
 
-    it = 0
+    nl = {'it': 0}
 
     def shell_function(x):
         """Shell function calling an external program"""
 
-        nonlocal it
 
         cmdline = cmdline_fn(x)
 
@@ -37,9 +36,9 @@ def external_fn(cmdline_fn, performance_fn, show_iter=True):
             raise Exception("External command terminated with {} - command line: '{}'".format(ret, cmdline))
 
         if show_iter:
-            print('{:5d} f({}) = {}'.format(it, ', '.join([ "{:.3e}".format(xv) for xv in x]) , fval ))
+            print('{0:5d} f({1}) = {2}'.format(nl['it'], ', '.join([ "{0:.3e}".format(xv) for xv in x]) , fval ))
 
-        it += 1
+        nl['it'] += 1
 
         return fval
 

@@ -18,4 +18,4 @@ def minimize_grid(fn, vardef):
             fmin = fval
             xmin = varset
 
-    print("Finished optimization after {} evaluations.\nThe optimal function value is {:.30f}\nOptimal variables: {}".format(neval, fmin, " ".join(["{:.3g}".format(x) for x in xmin])))
+    print("Finished optimization after {0} evaluations.\nThe optimal function value is {1:.30f}\nOptimal variables: {2}".format(neval, fmin, " ".join(["{0:.3g}".format(x) for x in xmin])))

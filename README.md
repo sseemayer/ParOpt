@@ -10,7 +10,7 @@ Paropt is a python tool for optimizing an application's parameters using system 
 ### Positional Arguments
 
   * `{min,max}` The direction of optimization
-  * `fn_call` A valid system call with placeholders (`{}` or numbered with `{0}`, `{1}`, etc.) representing parameters, e.g. `'examples/rosenbrock.py {} {}'`.
+  * `fn_call` A valid system call with placeholders (`{}` (only Python 2.7 or higher) or numbered with `{0}`, `{1}`, etc.) representing parameters, e.g. `'examples/rosenbrock.py {} {}'`.
   * `fval_regex` A valid regular expression that contains a capturing group representing the function value to parse out, e.g. `'fx = (.*)'`
 
 All additional positional arguments will represent initial values for the variables - make sure the number of variables matches your function call!
@@ -48,7 +48,7 @@ Let's say we have a python program calculating the value of the Rosenbrock funct
 
 We can minimize this function using popt:
 
-    $ ./popt --xtol 1e-8 min 'examples/rosenbrock.py {} {} {} {} {}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
+    $ ./popt --xtol 1e-8 min 'examples/rosenbrock.py {0} {1} {2} {3} {4}' 'fx = (.*)' 1.3 0.7 0.8 1.9 1.2
     [...]
     success: True
     status: 0
@@ -62,9 +62,9 @@ We can minimize this function using popt:
 
 The following example minimizes the Rosenbrock banana function located in `examples/rosenbrock.py` in 2 variables using grid search covering the grid `[0, 0.1, ... 1.9]` for each of the variables.
 
-	$ ./popt -g min 'examples/rosenbrock.py {} {}' 'fx = (.*)' 0,2,0.1 0,2,0.1
+	$ ./popt -g min 'examples/rosenbrock.py {1} {2}' 'fx = (.*)' 0,2,0.1 0,2,0.1
 
 ## Dependencies
 
-* Python 3.3 or better (I will probably make this more downward-compatible later, but for now I'm enjoying the cutting edge :D)
+* Python 2.6 or later (including Python 3)
 * scipy 0.12
